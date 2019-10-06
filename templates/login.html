@@ -2,15 +2,18 @@
 
 {% block title %}Login Page{% endblock %}
 
-{% block navbar %}
-<div class="navbar navbar-fixed-top">
-  <!-- ... -->
-</div>
-{% endblock %}
-
 {% block content %}
+        {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div>
+            {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <h1>Welcome to the WBD220 Spell Check Login Page, Please sign in</h1>
-    <form action="" method="post" novalidate>
+    <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
             {{ form.username.label }}<br>
@@ -20,12 +23,12 @@
             {{ form.password.label }}<br>
             {{ form.password(size=32) }}
         </p>
-        <p>{{ form.two_fa_field() }} {{ form.two_fa_field.label }}</p>
+        <p>
+            {{ form.two_fa_field.label }}<br>
+            {{ form.two_fa_field() }}
+        </p>
         <p>{{ form.submit() }}</p>
     </form>
  <a href="{{ url_for('register') }}">Not Registered User?  Click me to visit registration page</a>
-{% if bad_typist_try %}
-<p> Bad Typing!  Brought you back to the Login Page.  Please log in or scram!</p>
-{% endif %}
 {% endblock %}
 

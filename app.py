@@ -1,24 +1,32 @@
 from flask import Flask, render_template, request, url_for, redirect, flash
 from flask_wtf import FlaskForm, form
 from wtforms import Form, StringField, TextAreaField, validators, StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length, EqualTo
 from flask_bootstrap import Bootstrap
 import os
 
 app = Flask(__name__)
 Bootstrap(app)
+app.config.from_object(__name__)
 app.config['SECRET_KEY'] = 'bd0c7d441f27d441f27567d441f2b6176a'
-
-
-class Config(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
 
 
 class LoginForm(FlaskForm):
     username = StringField('uname', validators=[DataRequired()])
-    password = PasswordField('Pword', validators=[DataRequired()])
+    password = PasswordField('pword', validators=[DataRequired()])
     two_fa_field = StringField('2FA', validators=[DataRequired()])
     submit = SubmitField('Sign In')
+
+
+class RegistrationForm(FlaskForm):
+    username = StringField('uname', validators=[DataRequired(), Length(min=2, max=20)])
+    password = PasswordField('pword', validators=[DataRequired()])
+    confirm_password = PasswordField('confirm pword', validators=[DataRequired(), EqualTo('password')])
+    two_fa_field = StringField('2FA', validators=[DataRequired()])
+    submit = SubmitField('Register me')
+
+
+userdict = {'tester': {'password': 'testpass', '2fa': '5555555555'}}
 
 
 @app.route('/')
@@ -28,29 +36,37 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    bad_typist_try = 0
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        flash("Login requested for user {}, two_fa_field={}".format(
-            login_form.username.data, login_form.two_fa_field.data))
-        return redirect(url_for('spell_check'))
-    return render_template('login.html', bad_typist_try=bad_typist_try, form=login_form)
+        if (userdict[login_form.username.data]['password'] == login_form.password.data and
+                userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data):
+            flash("Login successful for user {}".format(login_form.username.data), 'success')
+            return redirect(url_for('spell_check'))
+        else:
+            flash("Login unsuccessful")
+    return render_template('login.html', form=login_form)
+
+
+#           flash("Login requested for user {}, two_fa_field={}".format(  # kept this for later use
+#                login_form.username.data, login_form.two_fa_field.data)) # kept for later use
+#           return redirect(url_for('spell_check'))                       # kept for later use
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    register_form = RegistrationForm()
+    if register_form.validate_on_submit():
+        userdict[RegistrationForm.username.data] = {}
+        userdict[RegistrationForm.username.data]['password'] = RegistrationForm.password.data
+        userdict[RegistrationForm.username.data]['2fa'] = RegistrationForm.two_fa_field.data
+        flash(f"Registration successful for user {RegistrationForm.username.data} Please login")
+        return redirect(url_for('login'))
+    return render_template('register.html', form=register_form)
 
 
 @app.route('/spell_check', methods=['GET', 'POST'])
 def spell_check():
     return render_template('spell_check.html')
-
-
-@app.errorhandler(404)
-def not_found(e):
-    bad_typist_try = 1
-    return render_template('login.html', bad_typist_try=bad_typist_try)
 
 
 if __name__ == '__main__':

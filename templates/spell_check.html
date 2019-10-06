@@ -1,9 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-<h1>spell check page</h1>
-</head>
-<body>
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Login Page{% endblock %}
+
+{% block content %}
+    {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div>
+            {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+<h1>Welcome to the WBD220 Spell Check Page</h1>
 <a href="{{ url_for('login') }}">Back to Login page</a>
-</body>
-</html>
+{% endblock %}
