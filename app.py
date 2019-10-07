@@ -37,6 +37,7 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
+    global userdict
     if login_form.validate_on_submit():
         if (userdict[login_form.username.data]['password'] == login_form.password.data and
                 userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data):
@@ -45,11 +46,6 @@ def login():
         else:
             flash("Login unsuccessful")
     return render_template('login.html', form=login_form)
-
-
-#           flash("Login requested for user {}, two_fa_field={}".format(  # kept this for later use
-#                login_form.username.data, login_form.two_fa_field.data)) # kept for later use
-#           return redirect(url_for('spell_check'))                       # kept for later use
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -70,4 +66,4 @@ def spell_check():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
