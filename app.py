@@ -27,7 +27,7 @@ class RegistrationForm(FlaskForm):
 
 
 class SpellCheckForm(FlaskForm):
-    text2test = TextAreaField('Text to Test', render_kw={"rows": 15, "cols": 45})
+    text2test = TextAreaField('inputtext', render_kw={"rows": 15, "cols": 45})
     submit = SubmitField("Check Spelling")
 
 
