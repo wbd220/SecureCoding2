@@ -52,10 +52,9 @@ def login():
 def register():
     register_form = RegistrationForm()
     if register_form.validate_on_submit():
-        userdict[RegistrationForm.username.data] = {}
-        userdict[RegistrationForm.username.data]['password'] = RegistrationForm.password.data
-        userdict[RegistrationForm.username.data]['2fa'] = RegistrationForm.two_fa_field.data
-        flash(f"Registration successful for user {RegistrationForm.username.data} Please login")
+        userdict[register_form.username.data] = {'password': register_form.password.data,
+                                                 '2fa': register_form.two_fa_field.data}
+        flash(f"Registration successful for user {register_form.username.data} Please login")
         return redirect(url_for('login'))
     return render_template('register.html', form=register_form)
 
