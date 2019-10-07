@@ -13,5 +13,14 @@
         {% endif %}
     {% endwith %}
 <h1>Welcome to the WBD220 Spell Check Page</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.text2test.label }}<br>
+            {{ form.text2test }}
+        </p>
+        <p>{{ form.submit() }}</p>
+        <br>
+    </form>
 <a href="{{ url_for('login') }}">Back to Login page</a>
 {% endblock %}

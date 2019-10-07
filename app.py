@@ -26,6 +26,11 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register me')
 
 
+class SpellCheckForm(FlaskForm):
+    text2test = TextAreaField('Text to Test', render_kw={"rows": 15, "cols": 45})
+    submit = SubmitField("Check Spelling")
+
+
 userdict = {'tester': {'password': 'testpass', '2fa': '5555555555'}}
 
 
@@ -39,12 +44,17 @@ def login():
     login_form = LoginForm()
     global userdict
     if login_form.validate_on_submit():
-        if (userdict[login_form.username.data]['password'] == login_form.password.data and
-                userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data):
-            flash("Login successful for user {}".format(login_form.username.data), 'success')
-            return redirect(url_for('spell_check'))
+        if login_form.username.data in userdict:
+            if (userdict[login_form.username.data]['password'] == login_form.password.data and
+                    userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data):
+                flash("Login successful for user {}".format(login_form.username.data), 'success')
+                return redirect(url_for('spell_check'))
+            else:
+                flash("Login unsuccessful")
+                return render_template('login.html', form=login_form)
         else:
-            flash("Login unsuccessful")
+            flash("Something wasn't right, try again")
+            return render_template('login.html', form=login_form)
     return render_template('login.html', form=login_form)
 
 
@@ -61,7 +71,11 @@ def register():
 
 @app.route('/spell_check', methods=['GET', 'POST'])
 def spell_check():
-    return render_template('spell_check.html')
+    spell_check_form = SpellCheckForm()
+    if spell_check_form.validate_on_submit():
+        #put some subprocess code here
+        q = 0
+    return render_template('spell_check.html', form=spell_check_form)
 
 
 if __name__ == '__main__':
