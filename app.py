@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, url_for, redirect, flash
+from flask import Flask, render_template, request, url_for, redirect, flash, session
 from flask_wtf import FlaskForm, form
 from wtforms import Form, StringField, TextAreaField, validators, StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Length, EqualTo
 from flask_bootstrap import Bootstrap
+# from flask_login import LoginManager, logout_user  #this is for flask-login
+# from app import login   # this is for flask-login
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import subprocess
 
@@ -10,6 +13,9 @@ app = Flask(__name__)
 Bootstrap(app)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = 'bd0c7d441f27d441f27567d441f2b6176a'
+
+
+# login = LoginManager(app)    # this is for flask-login
 
 
 class LoginForm(FlaskForm):
@@ -29,7 +35,7 @@ class RegistrationForm(FlaskForm):
 
 class SpellCheckForm(FlaskForm):
     text2test = TextAreaField('inputtext', render_kw={"rows": 15, "cols": 45})
-    misspelled_stuff = TextAreaField('Misspelled Words')
+    misspelled_stuff = TextAreaField('misspelled')
     submit = SubmitField("Check Spelling")
 
 
@@ -50,12 +56,13 @@ def login():
             if (userdict[login_form.username.data]['password'] == login_form.password.data and
                     userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data):
                 flash("Login successful for user {}".format(login_form.username.data), 'success')
+                session['username'] = login_form.username.data  # create session cookie
                 return redirect(url_for('spell_check'))
             else:
                 flash("Login unsuccessful")
                 return render_template('login.html', form=login_form)
         else:
-            flash("Something wasn't right, try again")
+            flash("You are not registered user, please register")
             return render_template('login.html', form=login_form)
     return render_template('login.html', form=login_form)
 
@@ -73,18 +80,36 @@ def register():
 
 @app.route('/spell_check', methods=['GET', 'POST'])
 def spell_check():
-    spell_check_form = SpellCheckForm()
-    if spell_check_form.validate_on_submit():
-        input_text = spell_check_form.text2test.data    # put text from form into a field
-        input_file = open("input_file.txt", 'w')            # open file
-        input_file.write(str(input_text))               # put text into file
-        input_file.close()                              # close the file
-        # call subprocess
-        misspelled_words = subprocess.run(['./a.out', './input_file.txt', './wordlist.txt'],
-                                          stdout=subprocess.PIPE).stdout.decode('utf-8')
-        spell_check_form.misspelled_stuff.data = misspelled_words
+    if 'username' in session:
+        spell_check_form = SpellCheckForm()
+        if spell_check_form.validate_on_submit():
+            input_text = spell_check_form.text2test.data  # put text from form into a field
+            input_file = open("input_file.txt", 'w')  # open file
+            input_file.write(str(input_text))  # put text into file
+            input_file.close()  # close the file
+            # call subprocess
+            misspelled_words = subprocess.run(['./a.out', './input_file.txt', './wordlist.txt'],
+                                              stdout=subprocess.PIPE).stdout.decode('utf-8').replace("\n", ", ").rstrip(
+                ", ")
+            spell_check_form.misspelled_stuff.data = misspelled_words
+            return render_template('spell_check.html', form=spell_check_form)
         return render_template('spell_check.html', form=spell_check_form)
-    return render_template('spell_check.html', form=spell_check_form)
+    else:
+        flash("You are not logged in, Please log in")
+        return redirect(url_for('login'))
+
+
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it is there
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
+
+# @app.route('/logout')   #  for flask-login
+# def logout():
+#     logout_user()
+#     return redirect(url_for('login'))
 
 
 if __name__ == '__main__':
