@@ -19,9 +19,13 @@
             {{ form.text2test.label }}<br>
             {{ form.text2test }}
         </p>
+        <div>
         {{ form.misspelled_stuff.label }}<br>
         {{ form.misspelled_stuff }}
-        <p>{{ form.submit() }}</p>
+        </div>
+        <p>
+        {{ form.submit() }}
+        </p>
         <br>
     </form>
 <a href="{{ url_for('login') }}">Back to Login page</a>

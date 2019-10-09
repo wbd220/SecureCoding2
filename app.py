@@ -29,7 +29,7 @@ class RegistrationForm(FlaskForm):
 
 class SpellCheckForm(FlaskForm):
     text2test = TextAreaField('inputtext', render_kw={"rows": 15, "cols": 45})
-    misspelled_stuff = StringField('Misspelled Words', render_kw={'readonly': True})
+    misspelled_stuff = TextAreaField('Misspelled Words')
     submit = SubmitField("Check Spelling")
 
 
