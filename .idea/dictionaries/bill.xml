@@ -2,6 +2,7 @@
   <dictionary name="bill">
     <words>
       <w>userdict</w>
+      <w>wordlist</w>
     </words>
   </dictionary>
 </component>

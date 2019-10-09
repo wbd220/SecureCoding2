@@ -4,6 +4,7 @@ from wtforms import Form, StringField, TextAreaField, validators, StringField, S
 from wtforms.validators import DataRequired, Length, EqualTo
 from flask_bootstrap import Bootstrap
 import os
+import subprocess
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -28,6 +29,7 @@ class RegistrationForm(FlaskForm):
 
 class SpellCheckForm(FlaskForm):
     text2test = TextAreaField('inputtext', render_kw={"rows": 15, "cols": 45})
+    misspelled_stuff = StringField('Misspelled Words', render_kw={'readonly': True})
     submit = SubmitField("Check Spelling")
 
 
@@ -73,8 +75,15 @@ def register():
 def spell_check():
     spell_check_form = SpellCheckForm()
     if spell_check_form.validate_on_submit():
-        #put some subprocess code here
-        q = 0
+        input_text = spell_check_form.text2test.data    # put text from form into a field
+        input_file = open("input_file.txt", 'w')            # open file
+        input_file.write(str(input_text))               # put text into file
+        input_file.close()                              # close the file
+        # call subprocess
+        misspelled_words = subprocess.run(['./a.out', './input_file.txt', './wordlist.txt'],
+                                          stdout=subprocess.PIPE).stdout.decode('utf-8')
+        spell_check_form.misspelled_stuff.data = misspelled_words
+        return render_template('spell_check.html', form=spell_check_form)
     return render_template('spell_check.html', form=spell_check_form)
 
 
