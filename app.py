@@ -54,17 +54,19 @@ def login():
     global userdict
     if login_form.validate_on_submit():
         if login_form.username.data in userdict:
-            if (userdict[login_form.username.data]['password'] == login_form.password.data and
-                    userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data):
-                flash("Login successful for user {}".format(login_form.username.data), 'success')
-                session['username'] = login_form.username.data  # create session cookie
-                return render_template('login.html', form=login_form, result='success')
+            if userdict[login_form.username.data]['password'] == login_form.password.data:
+                if userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data:
+                    flash("Login successful for user {}".format(login_form.username.data), 'success')
+                    session['username'] = login_form.username.data  # create session cookie
+                    return render_template('login.html', form=login_form, result='success')
+                else:
+                    flash("Login unsuccessful")
+                    return render_template('login.html', form=login_form, result='Two-factor failure')
             else:
-                flash("Login unsuccessful")
-                return render_template('login.html', form=login_form, result='failure')
+                return render_template('login.html', form=login_form, result='incorrect')
         else:
             flash("You are not registered user, please register")
-            return render_template('login.html', form=login_form, result='failure')
+            return render_template('login.html', form=login_form, result='incorrect')
     return render_template('login.html', form=login_form, result='')
 
 
