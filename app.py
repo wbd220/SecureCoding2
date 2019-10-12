@@ -40,7 +40,7 @@ class SpellCheckForm(FlaskForm):
 
 
 userdict = {'tester': {'password': 'testpass', '2fa': '5555555555'}}
-
+success = ''
 
 @app.route('/')
 def index():
@@ -57,7 +57,6 @@ def login():
                     userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data):
                 flash("Login successful for user {}".format(login_form.username.data), 'success')
                 session['username'] = login_form.username.data  # create session cookie
-                success = ''
                 return render_template('login.html', form=login_form, success='success')
             else:
                 flash("Login unsuccessful")
