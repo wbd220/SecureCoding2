@@ -21,7 +21,7 @@ app.config['SECRET_KEY'] = 'bd0c7d441f27d441f27567d441f2b6176a'
 class LoginForm(FlaskForm):
     username = StringField('uname', validators=[DataRequired()])
     password = PasswordField('pword', validators=[DataRequired()])
-    two_fa_field = StringField('2FA', validators=[DataRequired()])
+    two_fa_field = StringField('2fa', validators=[DataRequired()])
     submit = SubmitField('Sign In')
 
 
@@ -55,7 +55,7 @@ def login():
     if login_form.validate_on_submit():
         if login_form.username.data in userdict:
             if userdict[login_form.username.data]['password'] == login_form.password.data:
-                if userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data.strip("\n"):
+                if userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data:
                     flash("Login successful for user {}".format(login_form.username.data), 'success')
                     session['username'] = login_form.username.data  # create session cookie
                     return render_template('login.html', form=login_form, result='success')
@@ -77,7 +77,7 @@ def register():
     if register_form.validate_on_submit():
         if register_form.username.data not in userdict:
             userdict[register_form.username.data] = {'password': register_form.password.data,
-                                                     '2fa': register_form.two_fa_field.data.strip('\n')}
+                                                     '2fa': register_form.two_fa_field.data}
             flash(f"Registration successful for user {register_form.username.data} Please login")
             return render_template('register.html', form=register_form, success='success')
         else:
