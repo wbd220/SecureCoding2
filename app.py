@@ -57,14 +57,15 @@ def login():
                     userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data):
                 flash("Login successful for user {}".format(login_form.username.data), 'success')
                 session['username'] = login_form.username.data  # create session cookie
-                return redirect(url_for('spell_check'))
+                success = ''
+                return render_template('login.html', form=login_form, success='success')
             else:
                 flash("Login unsuccessful")
-                return render_template('login.html', form=login_form)
+                return render_template('login.html', form=login_form, success='failure')
         else:
             flash("You are not registered user, please register")
-            return render_template('login.html', form=login_form)
-    return render_template('login.html', form=login_form)
+            return render_template('login.html', form=login_form, success='failure')
+    return render_template('login.html', form=login_form, success='')
 
 
 @app.route('/register', methods=['GET', 'POST'])
