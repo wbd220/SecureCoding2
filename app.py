@@ -41,6 +41,7 @@ class SpellCheckForm(FlaskForm):
 
 userdict = {'tester': {'password': 'testpass', '2fa': '5555555555'}}
 result = ''
+success = ''
 
 @app.route('/')
 def index():
@@ -74,7 +75,7 @@ def register():
         userdict[register_form.username.data] = {'password': register_form.password.data,
                                                  '2fa': register_form.two_fa_field.data}
         flash(f"Registration successful for user {register_form.username.data} Please login")
-        return redirect(url_for('login'))
+        return render_template('register.html', form=register_form, success='success')
     return render_template('register.html', form=register_form)
 
 
