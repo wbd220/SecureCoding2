@@ -55,7 +55,7 @@ def login():
     if login_form.validate_on_submit():
         if login_form.username.data in userdict:
             if userdict[login_form.username.data]['password'] == login_form.password.data:
-                if userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data:
+                if userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data.strip("\n"):
                     flash("Login successful for user {}".format(login_form.username.data), 'success')
                     session['username'] = login_form.username.data  # create session cookie
                     return render_template('login.html', form=login_form, result='success')
