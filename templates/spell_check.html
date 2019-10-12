@@ -20,8 +20,9 @@
             {{ form.text2test }}
         </p>
         <div>
-        {{ form.misspelled_stuff.label }}<br>
-        {{ form.misspelled_stuff }}
+            <p>misspelled words: </p>
+            {{ misspelled}}<br>
+        <!-- {{ form.misspelled_stuff }}  -->
         </div>
         <p>
         {{ form.submit() }}

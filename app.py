@@ -35,7 +35,7 @@ class RegistrationForm(FlaskForm):
 
 class SpellCheckForm(FlaskForm):
     text2test = TextAreaField('inputtext', render_kw={"rows": 15, "cols": 45})
-    misspelled_stuff = TextAreaField('misspelled')
+    # misspelled_stuff = TextAreaField('misspelled')
     submit = SubmitField("Check Spelling")
 
 
@@ -88,11 +88,11 @@ def spell_check():
             input_file.write(str(input_text))  # put text into file
             input_file.close()  # close the file
             # call subprocess
-            misspelled_words = subprocess.run(['./a.out', './input_file.txt', './wordlist.txt'],
+            misspelled = subprocess.run(['./a.out', './input_file.txt', './wordlist.txt'],
                                               stdout=subprocess.PIPE).stdout.decode('utf-8').replace("\n", ", ").rstrip(
                 ", ")
-            spell_check_form.misspelled_stuff.data = misspelled_words
-            return render_template('spell_check.html', form=spell_check_form)
+            # spell_check_form.misspelled_stuff.data = misspelled_words
+            return render_template('spell_check.html', form=spell_check_form, misspelled=misspelled)
         return render_template('spell_check.html', form=spell_check_form)
     else:
         flash("You are not logged in, Please log in")
