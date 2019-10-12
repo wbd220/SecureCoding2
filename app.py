@@ -60,14 +60,15 @@ def login():
                     session['username'] = login_form.username.data  # create session cookie
                     return render_template('login.html', form=login_form, result='success')
                 else:
-                    flash("Login unsuccessful")
+                    flash("Login unsuccessful.  bad 2fa")
                     return render_template('login.html', form=login_form, result='Two-factor failure')
             else:
+                flash("Login unsuccessful, bad password")
                 return render_template('login.html', form=login_form, result='incorrect')
         else:
             flash("You are not registered user, please register")
             return render_template('login.html', form=login_form, result='incorrect')
-    return render_template('login.html', form=login_form, result='')
+    return render_template('login.html', form=login_form,)
 
 
 @app.route('/register', methods=['GET', 'POST'])
