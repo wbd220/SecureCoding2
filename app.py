@@ -19,14 +19,14 @@ app.config['SECRET_KEY'] = 'bd0c7d441f27d441f27567d441f2b6176a'
 
 
 class LoginForm(FlaskForm):
-    username = StringField('uname', validators=[DataRequired()])
+    uname = StringField('uname', validators=[DataRequired()])
     password = PasswordField('pword', validators=[DataRequired()])
     two_fa_field = StringField('2fa', validators=[DataRequired()])
     submit = SubmitField('Sign In')
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('uname', validators=[DataRequired(), Length(min=2, max=20)])
+    uname = StringField('uname', validators=[DataRequired(), Length(min=2, max=20)])
     password = PasswordField('pword', validators=[DataRequired()])
     confirm_password = PasswordField('confirm pword', validators=[DataRequired(), EqualTo('password')])
     two_fa_field = StringField('2FA', validators=[DataRequired()])
@@ -53,11 +53,11 @@ def login():
     login_form = LoginForm()
     global userdict
     if login_form.validate_on_submit():
-        if login_form.username.data in userdict:
-            if userdict[login_form.username.data]['password'] == login_form.password.data:
-                if userdict[login_form.username.data]['2fa'] == login_form.two_fa_field.data:
-                    flash("Login successful for user {}".format(login_form.username.data), 'success')
-                    session['username'] = login_form.username.data  # create session cookie
+        if login_form.uname.data in userdict:
+            if userdict[login_form.uname.data]['password'] == login_form.password.data:
+                if userdict[login_form.uname.data]['2fa'] == login_form.two_fa_field.data:
+                    flash("Login successful for user {}".format(login_form.uname.data), 'success')
+                    session['uname'] = login_form.uname.data  # create session cookie
                     return render_template('login.html', form=login_form, result='success')
                 else:
                     flash("Login unsuccessful.  bad 2fa")
@@ -75,20 +75,20 @@ def login():
 def register():
     register_form = RegistrationForm()
     if register_form.validate_on_submit():
-        if register_form.username.data not in userdict:
-            userdict[register_form.username.data] = {'password': register_form.password.data,
+        if register_form.uname.data not in userdict:
+            userdict[register_form.uname.data] = {'password': register_form.password.data,
                                                      '2fa': register_form.two_fa_field.data}
-            flash(f"Registration successful for user {register_form.username.data} Please login")
+            flash(f"Registration successful for user {register_form.uname.data} Please login")
             return render_template('register.html', form=register_form, success='success')
         else:
-            flash(f"User {register_form.username.data} already registered")
+            flash(f"User {register_form.uname.data} already registered")
             return render_template('register.html', form=register_form, success='failure')
     return render_template('register.html', form=register_form)
 
 
 @app.route('/spell_check', methods=['GET', 'POST'])
 def spell_check():
-    if 'username' in session:
+    if 'uname' in session:
         spell_check_form = SpellCheckForm()
         if spell_check_form.validate_on_submit():
             input_text = spell_check_form.text2test.data  # put text from form into a field

@@ -15,9 +15,9 @@
     <h1>Welcome to the WBD220 Spell Check Login Page, Please sign in</h1>
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
+        <p id="uname">
+            {{ form.uname.label }}<br>
+            {{ form.uname(size=32) }}
         </p>
         <p>
             {{ form.password.label }}<br>
