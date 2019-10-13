@@ -21,15 +21,15 @@ app.config['SECRET_KEY'] = 'bd0c7d441f27d441f27567d441f2b6176a'
 class LoginForm(FlaskForm):
     uname = StringField('uname', validators=[DataRequired()])
     pword = PasswordField('pword', validators=[DataRequired()])
-    two_fa_field = StringField('2fa', validators=[DataRequired()])
+    two_fa_field = StringField(label="2fa", validators=[DataRequired()])
     submit = SubmitField('Sign In')
 
 
 class RegistrationForm(FlaskForm):
-    uname = StringField('uname', validators=[DataRequired(), Length(min=2, max=20)])
-    pword = PasswordField('pword', validators=[DataRequired()])
+    uname = StringField(id='uname', validators=[DataRequired(), Length(min=2, max=20)])
+    pword = PasswordField(id='pword', validators=[DataRequired()])
 #    confirm_password = PasswordField('confirm pword', validators=[DataRequired(), EqualTo('password')])
-    two_fa_field = StringField('2fa', validators=[DataRequired()])
+    two_fa_field = StringField(label="2fa", validators=[DataRequired()])
     submit = SubmitField('Register me')
 
 
