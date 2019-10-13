@@ -34,7 +34,7 @@ class RegistrationForm(FlaskForm):
 
 
 class SpellCheckForm(FlaskForm):
-    text2test = TextAreaField('inputtext', render_kw={"rows": 15, "cols": 45})
+    inputtext = TextAreaField('inputtext', render_kw={"rows": 15, "cols": 45})
     # misspelled_stuff = TextAreaField('misspelled')
     submit = SubmitField("Check Spelling")
 
@@ -91,7 +91,7 @@ def spell_check():
     if 'uname' in session:
         spell_check_form = SpellCheckForm()
         if spell_check_form.validate_on_submit():
-            input_text = spell_check_form.text2test.data  # put text from form into a field
+            input_text = spell_check_form.inputtext.data  # put text from form into a field
             input_file = open("input_file.txt", 'w')  # open file
             input_file.write(str(input_text))  # put text into file
             input_file.close()  # close the file
