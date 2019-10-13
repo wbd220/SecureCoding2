@@ -20,16 +20,16 @@ app.config['SECRET_KEY'] = 'bd0c7d441f27d441f27567d441f2b6176a'
 
 class LoginForm(FlaskForm):
     uname = StringField('uname', validators=[DataRequired()])
-    password = PasswordField('pword', validators=[DataRequired()])
+    pword = PasswordField('pword', validators=[DataRequired()])
     two_fa_field = StringField('2fa', validators=[DataRequired()])
     submit = SubmitField('Sign In')
 
 
 class RegistrationForm(FlaskForm):
     uname = StringField('uname', validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('pword', validators=[DataRequired()])
-    confirm_password = PasswordField('confirm pword', validators=[DataRequired(), EqualTo('password')])
-    two_fa_field = StringField('2FA', validators=[DataRequired()])
+    pword = PasswordField('pword', validators=[DataRequired()])
+#    confirm_password = PasswordField('confirm pword', validators=[DataRequired(), EqualTo('password')])
+    two_fa_field = StringField('2fa', validators=[DataRequired()])
     submit = SubmitField('Register me')
 
 
@@ -54,7 +54,7 @@ def login():
     global userdict
     if login_form.validate_on_submit():
         if login_form.uname.data in userdict:
-            if userdict[login_form.uname.data]['password'] == login_form.password.data:
+            if userdict[login_form.uname.data]['password'] == login_form.pword.data:
                 if userdict[login_form.uname.data]['2fa'] == login_form.two_fa_field.data:
                     flash("Login successful for user {}".format(login_form.uname.data), 'success')
                     session['uname'] = login_form.uname.data  # create session cookie
@@ -76,7 +76,7 @@ def register():
     register_form = RegistrationForm()
     if register_form.validate_on_submit():
         if register_form.uname.data not in userdict:
-            userdict[register_form.uname.data] = {'password': register_form.password.data,
+            userdict[register_form.uname.data] = {'password': register_form.pword.data,
                                                      '2fa': register_form.two_fa_field.data}
             flash(f"Registration successful for user {register_form.uname.data} Please login")
             return render_template('register.html', form=register_form, success='success')
