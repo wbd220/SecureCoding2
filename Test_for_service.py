@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 
 server_address = "http://127.0.0.1:5000"
-SERVICE_ADDR = server_address
 
 
 class FeatureTest(unittest.TestCase):
@@ -29,10 +28,10 @@ class FeatureTest(unittest.TestCase):
             session = requests.Session()
         reqdata = {"uname": "tester2", "pword": "password", "2fa": "15553334444"}
         req = session.post(server_address + "/register", data=reqdata)
-        print(req)
+        print("your request came back with", req)
         soup = BeautifulSoup(req.text, features="html.parser")
         login_result = soup.find("success")
-        print(login_result)
+        print("login_result is", login_result)
         # assert login_result is not None
         self.assertEqual(login_result, "success")
 
