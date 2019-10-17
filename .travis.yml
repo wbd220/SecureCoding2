@@ -8,8 +8,8 @@ before_install:
   - sudo apt-get update
 
 install:
-  - pip3 install tox-travis
-  - pip3 install requirements.txt
+  - pip install tox-travis
+  - pip install requirements.txt
 
 script:
   - flask run &
