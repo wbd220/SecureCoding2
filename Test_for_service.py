@@ -33,7 +33,7 @@ class FeatureTest(unittest.TestCase):
         login_result = soup.find("success")
         print("login_result is", login_result)
         # assert login_result is not None
-        self.assertEqual(login_result, "success")
+        self.assertNotEqual(login_result, "success")
 
 
 if __name__ == '__main__':
