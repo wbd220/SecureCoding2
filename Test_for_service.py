@@ -23,10 +23,12 @@ class FeatureTest(unittest.TestCase):
         self.assertEqual(req.status_code, 200)
         print("testing to see if /register page is there")
 
-    def test_register_account(self):
+    def test_register_account(self, session=None):
         login_result = None
+        if session is None:
+            session = requests.Session()
         reqdata = {"uname": "tester2", "pword": "password", "2fa": "15553334444"}
-        req = requests.post(server_address + "/register", data=reqdata)
+        req = session.post(server_address + "/register", data=reqdata)
         print(req)
         soup = BeautifulSoup(req.text, features="html.parser")
         login_result = soup.find("success")
