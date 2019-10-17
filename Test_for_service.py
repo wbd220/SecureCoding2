@@ -9,7 +9,7 @@ class FeatureTest(unittest.TestCase):
 
     def home_page_check(self):
         req = requests.get(server_address)
-        self.assertEqual(req.status_code, 404)
+        self.assertEqual(req.status_code, 200)
         print("testing to see if there is a default page")
 
     def login_page_check(self):
