@@ -24,12 +24,14 @@ class FeatureTest(unittest.TestCase):
         print("testing to see if /register page is there")
 
     def test_register_account(self):
+        login_result = None
         reqdata = {"uname": "tester2", "pword": "password", "2fa": "15553334444"}
         req = requests.post(server_address + "/register", data=reqdata)
         print(req)
         soup = BeautifulSoup(req.text, features="html.parser")
         login_result = soup.find("success")
         print(login_result)
+        assert login_result is not None
         self.assertEqual(login_result, "success")
 
 
