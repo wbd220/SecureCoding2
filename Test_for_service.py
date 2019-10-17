@@ -27,11 +27,10 @@ class FeatureTest(unittest.TestCase):
         reqdata = {"uname": "tester2", "pword": "password", "2fa": "15553334444"}
         req = requests.post(server_address + "/register", data=reqdata)
         print(req)
-        soup = BeautifulSoup(req.text)
-        login_result=soup.find("result")
+        soup = BeautifulSoup(req.text, features="html.parser")
+        login_result = soup.find("success")
         print(login_result)
         self.assertEqual(login_result, "success")
-
 
 
 if __name__ == '__main__':
