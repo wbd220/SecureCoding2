@@ -21,3 +21,7 @@ class FeatureTest(unittest.TestCase):
         req = requests.get(server_address + "/register")
         self.assertEqual(req.status_code, 200)
         print("testing to see if /register page is there")
+
+
+if __name__ == '__main__':
+    unittest.main()
