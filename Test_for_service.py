@@ -24,7 +24,7 @@ class FeatureTest(unittest.TestCase):
         print("testing to see if /register page is there")
 
     def test_register_account(self):
-        reqdata = {"tester2": uname, "password": pword, "15553334444": two_fa_field}
+        reqdata = {"uname": "tester2", "pword": "password", "2fa": "15553334444"}
         req = requests.post(server_address + "/register", data=reqdata)
         print(req)
         soup = BeautifulSoup(req.text, "html_parser")
