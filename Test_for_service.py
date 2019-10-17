@@ -29,6 +29,7 @@ class FeatureTest(unittest.TestCase):
         print(req)
         soup = BeautifulSoup(req.text, "html_parser")
         login_result=soup.find("result")
+        print(login_result)
         self.assertEqual(login_result, "success")
 
 
