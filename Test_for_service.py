@@ -30,7 +30,7 @@ class FeatureTest(unittest.TestCase):
         req = session.post(server_address + "/register", data=reqdata)
         print("your request came back with", req)
         soup = BeautifulSoup(req.text, features="html.parser")
-        login_result = soup.find.text(id="success")
+        login_result = soup.find(id="success").text
         print("login_result is", login_result)
         # assert login_result is not None
         self.assertNotEqual(login_result, "success")
