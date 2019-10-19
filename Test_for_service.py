@@ -31,7 +31,7 @@ class FeatureTest(unittest.TestCase):
         print("your request came back with", req)
         soup = BeautifulSoup(req.text, features="html.parser")
         login_result = soup.find(id="success").text
-        print("login_result is %s", login_result)
+        print("login_result is {}".format(login_result))
         # assert login_result is not None
         self.assertNotEqual(login_result, "success")
 
