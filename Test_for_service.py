@@ -28,7 +28,7 @@ class FeatureTest(unittest.TestCase):
             session = requests.Session()
         getreq = session.get(server_address + "/register")
         soup = BeautifulSoup(getreq.text, features="html.parser")
-        csrf_token = soup.find(id="csrf_token").text
+        csrf_token = soup.find(id="csrf_token").get("value")
         print("csrf token is: ", csrf_token)
         reqdata = {"uname": "tester2", "pword": "password", "2fa": "15553334444", 'csrf_token': csrf_token}
         req = session.post(server_address + "/register", data=reqdata)
