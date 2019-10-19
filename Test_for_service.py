@@ -26,7 +26,11 @@ class FeatureTest(unittest.TestCase):
         login_result = None
         if session is None:
             session = requests.Session()
-        reqdata = {"uname": "tester2", "pword": "password", "2fa": "15553334444"}
+        getreq = session.get(server_address + "/register")
+        soup = BeautifulSoup(getreq.text, features="html.parser")
+        csrf_token = soup.find(id="csrf_token").text
+        print("csrf token is: ", csrf_token)
+        reqdata = {"uname": "tester2", "pword": "password", "2fa": "15553334444", 'csrf_token': csrf_token}
         req = session.post(server_address + "/register", data=reqdata)
         print("your request came back with", req)
         soup = BeautifulSoup(req.text, features="html.parser")
